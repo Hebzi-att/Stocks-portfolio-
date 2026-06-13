@@ -275,7 +275,7 @@
   </div>
 
   <footer>
-    Portfolio tracker · US prices via Anthropic API · Saudi prices via SAHMK (Licensed by Tadawul)<br>
+    Portfolio tracker · Live prices via Yahoo Finance · No API key required · Free forever<br>
     Not financial advice · Prices may be delayed
   </footer>
 </div>
@@ -287,7 +287,7 @@ const PWD_KEY  = 'pf_pwd';
 const AUTH_KEY = 'pf_auth';
 const DATA_KEY = 'pf_data_v3';
 const SESSION  = 30 * 24 * 60 * 60 * 1000; // 30 days
-const SAHMK_KEY = 'shmk_live_dd7d76ff4d871d38b396f05fb4483624d5a54989ae858122';
+
 const COLORS   = ['#c8f135','#34d399','#60a5fa','#fbbf24','#f87171','#a78bfa','#fb923c','#38bdf8'];
 const USD_TO_SAR = 3.75; // fixed peg
 
@@ -375,38 +375,31 @@ function marketStatus() {
   document.getElementById('sa-lbl').textContent = 'Saudi '+(saOpen?'Open':'Closed');
 }
 
-// ── FETCH US PRICE (Anthropic) ────────────────────────────────
-async function fetchUS(ticker, name) {
+// ── FETCH PRICE via Yahoo Finance (no API key needed) ────────
+async function fetchYahoo(symbol) {
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({
-        model:'claude-sonnet-4-20250514', max_tokens:500,
-        tools:[{type:'web_search_20250305',name:'web_search'}],
-        messages:[{role:'user',content:`Current stock price of ${ticker} (${name}) on US market. Reply ONLY with JSON: {"price":123.45,"change_pct":-1.23} no other text.`}]
-      })
-    });
+    const url = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=1d&range=1d`;
+    const res = await fetch(url, { headers: { 'Accept': 'application/json' } });
     const d = await res.json();
-    const txt = d.content.map(i=>i.text||'').join('');
-    const m = txt.match(/\{"price"\s*:\s*[\d.]+\s*,\s*"change_pct"\s*:\s*-?[\d.]+\}/);
-    if (m) return JSON.parse(m[0]);
+    const meta = d?.chart?.result?.[0]?.meta;
+    if (meta) {
+      const price = meta.regularMarketPrice || meta.previousClose;
+      const prev  = meta.chartPreviousClose || meta.previousClose;
+      const change_pct = prev ? ((price - prev) / prev * 100) : 0;
+      return { price: parseFloat(price.toFixed(2)), change_pct: parseFloat(change_pct.toFixed(2)) };
+    }
   } catch(e) {}
   return null;
 }
 
-// ── FETCH SAUDI PRICE (SAHMK) ─────────────────────────────────
-async function fetchSA(ticker) {
-  try {
-    const res = await fetch(`https://app.sahmk.sa/api/v1/quote/${ticker}/`, {
-      headers:{'X-API-Key': SAHMK_KEY}
-    });
-    const d = await res.json();
-    if (d.price !== undefined) {
-      return { price: parseFloat(d.price), change_pct: parseFloat(d.change_percent || 0) };
-    }
-  } catch(e) {}
-  return null;
+async function fetchUS(ticker, name) {
+  return await fetchYahoo(ticker);
+}
+
+// ── FETCH SAUDI PRICE via Yahoo Finance ──────────────────────
+async function fetchSA(ticker, name) {
+  // Saudi stocks on Yahoo Finance use format: 2222.SR
+  return await fetchYahoo(ticker + '.SR');
 }
 
 // ── REFRESH ───────────────────────────────────────────────────
@@ -421,7 +414,7 @@ async function refreshAll() {
       if (r) { h.livePrice = r.price; h.changePct = r.change_pct; }
     }),
     ...holdings.SA.map(async h => {
-      const r = await fetchSA(h.ticker);
+      const r = await fetchSA(h.ticker, h.name);
       if (r) { h.livePrice = r.price; h.changePct = r.change_pct; }
     })
   ]);
