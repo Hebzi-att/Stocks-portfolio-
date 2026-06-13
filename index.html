@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Portfolio</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
@@ -12,674 +12,552 @@
     --surface: #111118;
     --surface2: #18181f;
     --border: rgba(255,255,255,0.07);
-    --border2: rgba(255,255,255,0.12);
+    --border2: rgba(255,255,255,0.13);
     --text: #f0f0f5;
     --muted: #6b6b80;
     --accent: #c8f135;
-    --accent-dim: rgba(200,241,53,0.1);
+    --accent-dim: rgba(200,241,53,0.10);
     --green: #34d399;
     --red: #f87171;
+    --gold: #fbbf24;
     --font-display: 'Syne', sans-serif;
     --font-mono: 'DM Mono', monospace;
   }
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--font-mono);
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
+  body { background: var(--bg); color: var(--text); font-family: var(--font-mono); min-height: 100vh; overflow-x: hidden; }
   body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
-    background-size: 40px 40px;
-    pointer-events: none;
-    z-index: 0;
+    content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background-image: linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
+    background-size: 44px 44px;
   }
 
-  /* ── LOCK SCREEN ── */
-  #lock-screen {
-    position: fixed; inset: 0; z-index: 100;
-    display: flex; align-items: center; justify-content: center;
-    background: var(--bg);
-  }
-  .lock-box {
-    background: var(--surface);
-    border: 1px solid var(--border2);
-    border-radius: 16px;
-    padding: 2.5rem 2rem;
-    width: 100%; max-width: 360px;
-    text-align: center;
-  }
-  .lock-logo { font-family: var(--font-display); font-size: 1.8rem; font-weight: 700; margin-bottom: 8px; }
+  /* ── LOCK ── */
+  #lock-screen { position: fixed; inset: 0; z-index: 999; display: flex; align-items: center; justify-content: center; background: var(--bg); }
+  .lock-box { background: var(--surface); border: 1px solid var(--border2); border-radius: 20px; padding: 2.5rem 2rem; width: 100%; max-width: 340px; text-align: center; }
+  .lock-logo { font-family: var(--font-display); font-size: 2rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 6px; }
   .lock-logo span { color: var(--accent); }
-  .lock-sub { font-size: 12px; color: var(--muted); margin-bottom: 2rem; }
-  .lock-input {
-    width: 100%;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    color: var(--text);
-    font-family: var(--font-mono);
-    font-size: 14px;
-    padding: 12px 16px;
-    border-radius: 8px;
-    outline: none;
-    text-align: center;
-    letter-spacing: 0.15em;
-    margin-bottom: 12px;
-    transition: border-color 0.15s;
-  }
+  .lock-sub { font-size: 11px; color: var(--muted); margin-bottom: 2rem; letter-spacing: 0.05em; }
+  .lock-input { width: 100%; background: var(--surface2); border: 1px solid var(--border); color: var(--text); font-family: var(--font-mono); font-size: 15px; padding: 13px 16px; border-radius: 10px; outline: none; text-align: center; letter-spacing: 0.2em; margin-bottom: 12px; transition: border-color 0.15s; }
   .lock-input:focus { border-color: var(--accent); }
-  .lock-input.error { border-color: var(--red); animation: shake 0.3s; }
-  @keyframes shake {
-    0%,100% { transform: translateX(0); }
-    25% { transform: translateX(-8px); }
-    75% { transform: translateX(8px); }
-  }
-  .lock-btn {
-    width: 100%;
-    background: var(--accent); color: #0a0a0f;
-    border: none; border-radius: 8px;
-    font-family: var(--font-mono); font-size: 13px; font-weight: 500;
-    padding: 12px; cursor: pointer;
-    transition: opacity 0.2s;
-  }
+  .lock-input.shake { animation: shake 0.3s; border-color: var(--red); }
+  @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-8px)} 75%{transform:translateX(8px)} }
+  .lock-btn { width: 100%; background: var(--accent); color: #0a0a0f; border: none; border-radius: 10px; font-family: var(--font-mono); font-size: 13px; font-weight: 500; padding: 13px; cursor: pointer; transition: opacity 0.2s; }
   .lock-btn:hover { opacity: 0.85; }
   .lock-error { font-size: 11px; color: var(--red); margin-top: 10px; min-height: 16px; }
-  .lock-hint { font-size: 10px; color: var(--muted); margin-top: 1.5rem; }
-  .change-pwd-link { font-size: 11px; color: var(--muted); cursor: pointer; text-decoration: underline; margin-top: 8px; display: inline-block; }
-  .change-pwd-link:hover { color: var(--accent); }
+  .lock-hint { font-size: 10px; color: var(--muted); margin-top: 1.5rem; line-height: 1.6; }
 
-  /* ── MAIN APP ── */
+  /* ── APP ── */
   #app { display: none; position: relative; z-index: 1; }
-  .wrap { max-width: 960px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+  .wrap { max-width: 1020px; margin: 0 auto; padding: 2rem 1.5rem 5rem; }
 
-  header {
-    display: flex; align-items: flex-start; justify-content: space-between;
-    margin-bottom: 3rem; padding-bottom: 1.5rem;
-    border-bottom: 1px solid var(--border);
-    flex-wrap: wrap; gap: 1rem;
-  }
-  .logo { font-family: var(--font-display); font-size: 1.5rem; font-weight: 700; letter-spacing: -0.02em; }
+  /* header */
+  header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border); flex-wrap: wrap; gap: 1rem; }
+  .logo { font-family: var(--font-display); font-size: 1.6rem; font-weight: 800; letter-spacing: -0.03em; }
   .logo span { color: var(--accent); }
-  .header-right { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
-  .market-badge {
-    display: flex; align-items: center; gap: 6px;
-    font-size: 11px; color: var(--muted);
-    background: var(--surface); border: 1px solid var(--border);
-    padding: 6px 12px; border-radius: 20px;
-  }
-  .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); }
+  .header-meta { font-size: 11px; color: var(--muted); margin-top: 3px; }
+  .header-right { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .badge { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--muted); background: var(--surface); border: 1px solid var(--border); padding: 6px 12px; border-radius: 20px; }
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); flex-shrink: 0; }
   .dot.open { background: var(--green); box-shadow: 0 0 6px var(--green); animation: pulse 2s infinite; }
-  @keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.4} }
-
-  .refresh-btn {
-    background: var(--accent); color: #0a0a0f;
-    border: none; border-radius: 8px;
-    font-family: var(--font-mono); font-size: 12px; font-weight: 500;
-    padding: 8px 16px; cursor: pointer;
-    display: flex; align-items: center; gap: 6px;
-    transition: opacity 0.2s;
-  }
-  .refresh-btn:hover { opacity: 0.85; }
-  .refresh-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.35} }
+  .btn-refresh { background: var(--accent); color: #0a0a0f; border: none; border-radius: 8px; font-family: var(--font-mono); font-size: 12px; font-weight: 500; padding: 8px 16px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: opacity 0.2s; }
+  .btn-refresh:hover { opacity: 0.85; }
+  .btn-refresh:disabled { opacity: 0.45; cursor: not-allowed; }
+  .btn-ghost { background: none; border: 1px solid var(--border); color: var(--muted); font-family: var(--font-mono); font-size: 11px; padding: 6px 12px; border-radius: 6px; cursor: pointer; transition: all 0.15s; }
+  .btn-ghost:hover { border-color: var(--border2); color: var(--text); }
+  .btn-danger:hover { border-color: var(--red); color: var(--red); }
   .spin { display: inline-block; }
   .spinning { animation: spin 0.8s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  .logout-btn {
-    background: none; border: 1px solid var(--border);
-    color: var(--muted); font-family: var(--font-mono); font-size: 11px;
-    padding: 6px 12px; border-radius: 6px; cursor: pointer;
-    transition: all 0.15s;
-  }
-  .logout-btn:hover { border-color: var(--red); color: var(--red); }
-
-  .stats-row {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 12px; margin-bottom: 2rem;
-  }
-  .stat-card {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 12px; padding: 1.25rem; transition: border-color 0.2s;
-  }
-  .stat-card:hover { border-color: var(--border2); }
+  /* stats */
+  .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-bottom: 2rem; }
+  .stat { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 1.2rem 1rem; transition: border-color 0.2s; }
+  .stat:hover { border-color: var(--border2); }
   .stat-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 8px; }
-  .stat-value { font-family: var(--font-display); font-size: 1.5rem; font-weight: 600; }
-  .stat-value.pos { color: var(--green); }
-  .stat-value.neg { color: var(--red); }
-  .stat-value.accent { color: var(--accent); }
+  .stat-val { font-family: var(--font-display); font-size: 1.45rem; font-weight: 700; }
+  .stat-val.accent { color: var(--accent); }
+  .stat-val.pos { color: var(--green); }
+  .stat-val.neg { color: var(--red); }
   .stat-sub { font-size: 11px; color: var(--muted); margin-top: 4px; }
 
-  .auto-row { display: flex; align-items: center; gap: 12px; margin-bottom: 2rem; flex-wrap: wrap; }
-  .auto-label { font-size: 11px; color: var(--muted); }
-  .auto-select {
-    background: var(--surface); border: 1px solid var(--border);
-    color: var(--text); font-family: var(--font-mono); font-size: 11px;
-    padding: 5px 10px; border-radius: 6px; cursor: pointer; outline: none;
-  }
-  .auto-select option { background: var(--surface2); }
-  .next-refresh { font-size: 11px; color: var(--muted); }
+  /* auto refresh */
+  .toolbar { display: flex; align-items: center; gap: 12px; margin-bottom: 2rem; flex-wrap: wrap; }
+  .toolbar-label { font-size: 11px; color: var(--muted); }
+  .sel { background: var(--surface); border: 1px solid var(--border); color: var(--text); font-family: var(--font-mono); font-size: 11px; padding: 5px 10px; border-radius: 6px; cursor: pointer; outline: none; }
+  .sel option { background: var(--surface2); }
+  .countdown { font-size: 11px; color: var(--muted); }
 
-  .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
-  .section-title { font-family: var(--font-display); font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+  /* market section */
+  .market-section { margin-bottom: 2.5rem; }
+  .market-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .market-title { font-family: var(--font-display); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); }
+  .market-total { font-size: 11px; color: var(--muted); margin-left: auto; }
 
-  .table-wrap {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 12px; overflow: hidden; margin-bottom: 2rem;
-  }
+  /* table */
+  .tbl-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
   table { width: 100%; border-collapse: collapse; }
-  thead th {
-    font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em;
-    color: var(--muted); padding: 12px 16px; text-align: right;
-    border-bottom: 1px solid var(--border); font-weight: 400;
-    background: var(--surface2);
-  }
+  thead th { font-size: 10px; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); padding: 11px 16px; text-align: right; border-bottom: 1px solid var(--border); font-weight: 400; background: var(--surface2); white-space: nowrap; }
   thead th:first-child { text-align: left; }
-  tbody tr { border-bottom: 1px solid var(--border); transition: background 0.15s; }
+  tbody tr { border-bottom: 1px solid var(--border); transition: background 0.12s; }
   tbody tr:last-child { border-bottom: none; }
   tbody tr:hover { background: var(--surface2); }
-  td { padding: 14px 16px; font-size: 13px; text-align: right; vertical-align: middle; }
+  td { padding: 13px 16px; font-size: 13px; text-align: right; vertical-align: middle; }
   td:first-child { text-align: left; }
-  .ticker { font-family: var(--font-display); font-weight: 600; font-size: 14px; }
-  .company { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .t-ticker { font-family: var(--font-display); font-weight: 700; font-size: 14px; }
+  .t-name { font-size: 11px; color: var(--muted); margin-top: 2px; }
   .pos-val { color: var(--green); }
   .neg-val { color: var(--red); }
-  .loading-cell { text-align: center !important; padding: 2rem !important; color: var(--muted); font-size: 12px; }
+  .empty-cell { text-align: center !important; padding: 2rem !important; color: var(--muted); font-size: 12px; }
+  .day-chg { font-size: 10px; margin-top: 2px; }
 
-  .alloc-section {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 12px; padding: 1.25rem; margin-bottom: 2rem;
-  }
-  .alloc-title { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 1rem; }
-  .alloc-bar-row { margin-bottom: 12px; }
-  .alloc-bar-label { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 5px; }
-  .alloc-bar-track { background: var(--surface2); border-radius: 3px; height: 6px; overflow: hidden; }
-  .alloc-bar-fill { height: 100%; border-radius: 3px; transition: width 0.6s ease; }
+  /* allocation */
+  .alloc-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 1.25rem; margin-bottom: 2rem; }
+  .alloc-heading { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 1rem; }
+  .alloc-row { margin-bottom: 11px; }
+  .alloc-meta { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px; }
+  .alloc-track { background: var(--surface2); border-radius: 3px; height: 5px; overflow: hidden; }
+  .alloc-fill { height: 100%; border-radius: 3px; transition: width 0.7s cubic-bezier(.4,0,.2,1); }
 
-  .add-section {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 12px; padding: 1.25rem; margin-bottom: 2rem;
-  }
-  .add-title { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 1rem; }
-  .add-form { display: flex; gap: 8px; flex-wrap: wrap; }
-  .add-form input, .add-form select {
-    background: var(--surface2); border: 1px solid var(--border);
-    color: var(--text); font-family: var(--font-mono); font-size: 12px;
-    padding: 8px 12px; border-radius: 6px; outline: none; transition: border-color 0.15s;
-  }
-  .add-form input:focus, .add-form select:focus { border-color: var(--accent); }
-  .add-form input::placeholder { color: var(--muted); }
-  .add-btn {
-    background: var(--surface2); border: 1px solid var(--border2);
-    color: var(--text); font-family: var(--font-mono); font-size: 12px;
-    padding: 8px 16px; border-radius: 6px; cursor: pointer; transition: all 0.15s;
-  }
-  .add-btn:hover { border-color: var(--accent); color: var(--accent); }
+  /* add position */
+  .add-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 1.25rem; margin-bottom: 2rem; }
+  .add-heading { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 1rem; }
+  .add-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .add-row input, .add-row select { background: var(--surface2); border: 1px solid var(--border); color: var(--text); font-family: var(--font-mono); font-size: 12px; padding: 8px 12px; border-radius: 6px; outline: none; transition: border-color 0.15s; }
+  .add-row input:focus, .add-row select:focus { border-color: var(--accent); }
+  .add-row input::placeholder { color: var(--muted); }
+  .add-row select option { background: var(--surface2); }
+  .btn-add { background: var(--surface2); border: 1px solid var(--border2); color: var(--text); font-family: var(--font-mono); font-size: 12px; padding: 8px 18px; border-radius: 6px; cursor: pointer; transition: all 0.15s; }
+  .btn-add:hover { border-color: var(--accent); color: var(--accent); }
 
-  /* change password modal */
-  #pwd-modal {
-    display: none; position: fixed; inset: 0; z-index: 200;
-    background: rgba(0,0,0,0.7); align-items: center; justify-content: center;
-  }
+  /* password modal */
+  #pwd-modal { display: none; position: fixed; inset: 0; z-index: 500; background: rgba(0,0,0,0.75); align-items: center; justify-content: center; }
   #pwd-modal.open { display: flex; }
-  .modal-box {
-    background: var(--surface); border: 1px solid var(--border2);
-    border-radius: 16px; padding: 2rem; width: 100%; max-width: 320px;
-  }
-  .modal-title { font-family: var(--font-display); font-size: 15px; font-weight: 600; margin-bottom: 1rem; }
-  .modal-input {
-    width: 100%; background: var(--surface2); border: 1px solid var(--border);
-    color: var(--text); font-family: var(--font-mono); font-size: 13px;
-    padding: 10px 14px; border-radius: 8px; outline: none; margin-bottom: 10px;
-    transition: border-color 0.15s;
-  }
-  .modal-input:focus { border-color: var(--accent); }
-  .modal-btns { display: flex; gap: 8px; margin-top: 4px; }
-  .modal-save {
-    flex: 1; background: var(--accent); color: #0a0a0f;
-    border: none; border-radius: 8px; font-family: var(--font-mono);
-    font-size: 12px; font-weight: 500; padding: 10px; cursor: pointer;
-  }
-  .modal-cancel {
-    flex: 1; background: none; border: 1px solid var(--border);
-    color: var(--muted); font-family: var(--font-mono); font-size: 12px;
-    padding: 10px; border-radius: 8px; cursor: pointer;
-  }
+  .modal { background: var(--surface); border: 1px solid var(--border2); border-radius: 16px; padding: 2rem; width: 100%; max-width: 310px; }
+  .modal-title { font-family: var(--font-display); font-size: 15px; font-weight: 700; margin-bottom: 1.25rem; }
+  .modal input { width: 100%; background: var(--surface2); border: 1px solid var(--border); color: var(--text); font-family: var(--font-mono); font-size: 13px; padding: 10px 14px; border-radius: 8px; outline: none; margin-bottom: 10px; transition: border-color 0.15s; }
+  .modal input:focus { border-color: var(--accent); }
+  .modal-btns { display: flex; gap: 8px; }
+  .modal-save { flex: 1; background: var(--accent); color: #0a0a0f; border: none; border-radius: 8px; font-family: var(--font-mono); font-size: 12px; font-weight: 500; padding: 10px; cursor: pointer; }
+  .modal-cancel { flex: 1; background: none; border: 1px solid var(--border); color: var(--muted); font-family: var(--font-mono); font-size: 12px; padding: 10px; border-radius: 8px; cursor: pointer; }
   .modal-msg { font-size: 11px; margin-top: 8px; min-height: 16px; }
 
-  footer { font-size: 10px; color: var(--muted); text-align: center; padding-top: 2rem; border-top: 1px solid var(--border); letter-spacing: 0.05em; }
+  footer { font-size: 10px; color: var(--muted); text-align: center; padding-top: 2rem; border-top: 1px solid var(--border); letter-spacing: 0.05em; line-height: 1.8; }
 
-  @media (max-width: 600px) {
-    .stats-row { grid-template-columns: 1fr 1fr; }
+  @media (max-width: 640px) {
+    .stats-grid { grid-template-columns: 1fr 1fr; }
     td, th { padding: 10px 10px; font-size: 12px; }
-    .stat-value { font-size: 1.2rem; }
+    .stat-val { font-size: 1.2rem; }
+    thead th { font-size: 9px; }
   }
 </style>
 </head>
 <body>
 
-<!-- LOCK SCREEN -->
+<!-- LOCK -->
 <div id="lock-screen">
   <div class="lock-box">
     <div class="lock-logo">Portfolio<span>.</span></div>
-    <div class="lock-sub">Enter your password to access your portfolio</div>
-    <input type="password" class="lock-input" id="pwd-input" placeholder="Password" onkeydown="if(event.key==='Enter')unlock()">
+    <div class="lock-sub">Your private investment dashboard</div>
+    <input type="password" id="pwd-in" class="lock-input" placeholder="••••••••" onkeydown="if(event.key==='Enter')unlock()">
     <button class="lock-btn" onclick="unlock()">Unlock</button>
-    <div class="lock-error" id="lock-error"></div>
-    <div class="lock-hint">First time? Default password is <strong>portfolio123</strong><br>Change it after logging in.</div>
+    <div class="lock-error" id="lock-err"></div>
+    <div class="lock-hint">Default password: <strong>portfolio123</strong><br>Change it after logging in.</div>
   </div>
 </div>
 
-<!-- CHANGE PASSWORD MODAL -->
+<!-- PASSWORD MODAL -->
 <div id="pwd-modal">
-  <div class="modal-box">
+  <div class="modal">
     <div class="modal-title">Change password</div>
-    <input type="password" class="modal-input" id="new-pwd1" placeholder="New password">
-    <input type="password" class="modal-input" id="new-pwd2" placeholder="Confirm new password">
+    <input type="password" id="np1" placeholder="New password">
+    <input type="password" id="np2" placeholder="Confirm password">
     <div class="modal-btns">
-      <button class="modal-cancel" onclick="closePwdModal()">Cancel</button>
-      <button class="modal-save" onclick="savePassword()">Save</button>
+      <button class="modal-cancel" onclick="closePwd()">Cancel</button>
+      <button class="modal-save" onclick="savePwd()">Save</button>
     </div>
     <div class="modal-msg" id="modal-msg"></div>
   </div>
 </div>
 
-<!-- MAIN APP -->
+<!-- APP -->
 <div id="app">
 <div class="wrap">
 
   <header>
     <div>
       <div class="logo">Portfolio<span>.</span></div>
-      <div style="font-size:11px;color:var(--muted);margin-top:4px;" id="last-updated">Not yet refreshed</div>
+      <div class="header-meta" id="last-updated">Not yet refreshed</div>
     </div>
     <div class="header-right">
-      <div class="market-badge"><span class="dot" id="us-dot"></span><span id="us-status">US Market</span></div>
-      <div class="market-badge"><span class="dot" id="sa-dot"></span><span id="sa-status">Saudi Market</span></div>
-      <button class="refresh-btn" onclick="refreshAll()" id="refresh-btn">
-        <span class="spin" id="spin-icon">↻</span> Refresh
+      <div class="badge"><span class="dot" id="us-dot"></span><span id="us-lbl">US</span></div>
+      <div class="badge"><span class="dot" id="sa-dot"></span><span id="sa-lbl">Saudi</span></div>
+      <button class="btn-refresh" id="btn-refresh" onclick="refreshAll()">
+        <span class="spin" id="spin-ic">↻</span> Refresh
       </button>
-      <button class="logout-btn" onclick="openPwdModal()" title="Change password">🔑 Password</button>
-      <button class="logout-btn" onclick="logout()">Lock</button>
+      <button class="btn-ghost" onclick="openPwd()">🔑</button>
+      <button class="btn-ghost btn-danger" onclick="lockApp()">Lock</button>
     </div>
   </header>
 
-  <div class="stats-row">
-    <div class="stat-card">
-      <div class="stat-label">Total value</div>
-      <div class="stat-value accent" id="s-total">—</div>
-      <div class="stat-sub">USD</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Total invested</div>
-      <div class="stat-value" id="s-invested">—</div>
-      <div class="stat-sub">USD</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Unrealized P&L</div>
-      <div class="stat-value" id="s-pnl">—</div>
-      <div class="stat-sub" id="s-pnl-pct">—</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Positions</div>
-      <div class="stat-value" id="s-positions">—</div>
-      <div class="stat-sub" id="s-markets">—</div>
-    </div>
+  <!-- STATS -->
+  <div class="stats-grid">
+    <div class="stat"><div class="stat-label">Total value</div><div class="stat-val accent" id="s-total">—</div><div class="stat-sub">USD equiv.</div></div>
+    <div class="stat"><div class="stat-label">Invested</div><div class="stat-val" id="s-inv">—</div><div class="stat-sub">USD equiv.</div></div>
+    <div class="stat"><div class="stat-label">Unrealized P&L</div><div class="stat-val" id="s-pnl">—</div><div class="stat-sub" id="s-pnl-pct">—</div></div>
+    <div class="stat"><div class="stat-label">US portfolio</div><div class="stat-val accent" id="s-us">—</div><div class="stat-sub">USD</div></div>
+    <div class="stat"><div class="stat-label">Saudi portfolio</div><div class="stat-val accent" id="s-sa">—</div><div class="stat-sub">SAR</div></div>
   </div>
 
-  <div class="auto-row">
-    <span class="auto-label">Auto-refresh:</span>
-    <select class="auto-select" id="auto-interval" onchange="setAutoRefresh()">
+  <!-- TOOLBAR -->
+  <div class="toolbar">
+    <span class="toolbar-label">Auto-refresh:</span>
+    <select class="sel" id="auto-sel" onchange="setAuto()">
       <option value="0">Off</option>
       <option value="60" selected>Every 60s</option>
       <option value="120">Every 2m</option>
       <option value="300">Every 5m</option>
     </select>
-    <span class="next-refresh" id="next-refresh"></span>
+    <span class="countdown" id="countdown"></span>
   </div>
 
-  <div class="section-header">
-    <div class="section-title">🇺🇸 US Market — Derayah Global</div>
-  </div>
-  <div class="table-wrap">
-    <table>
-      <thead><tr>
-        <th>Stock</th><th>Shares</th><th>Avg cost</th>
-        <th>Live price</th><th>Mkt value</th><th>P&L</th><th>Return</th><th></th>
-      </tr></thead>
-      <tbody id="us-tbody"></tbody>
-    </table>
-  </div>
-
-  <div class="section-header">
-    <div class="section-title">🇸🇦 Saudi Market — Ahli Capital</div>
-  </div>
-  <div class="table-wrap">
-    <table>
-      <thead><tr>
-        <th>Stock</th><th>Shares</th><th>Avg cost</th>
-        <th>Live price</th><th>Mkt value</th><th>P&L</th><th>Return</th><th></th>
-      </tr></thead>
-      <tbody id="sa-tbody"></tbody>
-    </table>
-  </div>
-
-  <div class="alloc-section">
-    <div class="alloc-title">Allocation</div>
-    <div id="alloc-bars"></div>
-  </div>
-
-  <div class="add-section">
-    <div class="add-title">Add a position</div>
-    <div class="add-form">
-      <input type="text" id="inp-ticker" placeholder="Ticker (e.g. AAPL)" style="width:130px;text-transform:uppercase;">
-      <input type="text" id="inp-name" placeholder="Company name" style="width:180px;">
-      <input type="number" id="inp-shares" placeholder="Shares" style="width:90px;" step="any">
-      <input type="number" id="inp-cost" placeholder="Avg cost" style="width:100px;" step="any">
-      <select id="inp-market" class="auto-select">
-        <option value="US">🇺🇸 US</option>
-        <option value="SA">🇸🇦 Saudi</option>
-      </select>
-      <input type="text" id="inp-currency" placeholder="USD/SAR" style="width:75px;">
-      <button class="add-btn" onclick="addPosition()">+ Add</button>
+  <!-- US TABLE -->
+  <div class="market-section">
+    <div class="market-header">
+      <div class="market-title">🇺🇸 US Market · Derayah Global</div>
+      <div class="market-total" id="us-total-lbl"></div>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr>
+          <th>Stock</th><th>Shares</th><th>Avg cost</th><th>Live price</th><th>Mkt value</th><th>P&L</th><th>Return</th><th></th>
+        </tr></thead>
+        <tbody id="us-body"></tbody>
+      </table>
     </div>
   </div>
 
-  <footer>Portfolio tracker · Prices via live search · Not financial advice · Data may be delayed</footer>
+  <!-- SAUDI TABLE -->
+  <div class="market-section">
+    <div class="market-header">
+      <div class="market-title">🇸🇦 Saudi Market · Ahli Capital</div>
+      <div class="market-total" id="sa-total-lbl"></div>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr>
+          <th>Stock</th><th>Shares</th><th>Avg cost</th><th>Live price</th><th>Mkt value</th><th>P&L</th><th>Return</th><th></th>
+        </tr></thead>
+        <tbody id="sa-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ALLOCATION -->
+  <div class="alloc-wrap">
+    <div class="alloc-heading">Allocation</div>
+    <div id="alloc"></div>
+  </div>
+
+  <!-- ADD POSITION -->
+  <div class="add-wrap">
+    <div class="add-heading">Add a position</div>
+    <div class="add-row">
+      <input type="text" id="in-ticker" placeholder="Ticker / Symbol" style="width:130px;text-transform:uppercase;">
+      <input type="text" id="in-name" placeholder="Company name" style="width:175px;">
+      <input type="number" id="in-shares" placeholder="Shares" style="width:85px;" step="any">
+      <input type="number" id="in-cost" placeholder="Avg cost" style="width:100px;" step="any">
+      <select id="in-market" class="sel">
+        <option value="US">🇺🇸 US</option>
+        <option value="SA">🇸🇦 Saudi</option>
+      </select>
+      <button class="btn-add" onclick="addPos()">+ Add</button>
+    </div>
+  </div>
+
+  <footer>
+    Portfolio tracker · US prices via Anthropic API · Saudi prices via SAHMK (Licensed by Tadawul)<br>
+    Not financial advice · Prices may be delayed
+  </footer>
 </div>
 </div>
 
 <script>
-// ── PASSWORD ──────────────────────────────────────────────────
-const PWD_KEY   = 'pf_pwd';
-const AUTH_KEY  = 'pf_auth';
-const DATA_KEY  = 'pf_data_v2';
-const SESSION_DURATION = 30 * 24 * 60 * 60 * 1000; // 30 days
+// ── CONSTANTS ─────────────────────────────────────────────────
+const PWD_KEY  = 'pf_pwd';
+const AUTH_KEY = 'pf_auth';
+const DATA_KEY = 'pf_data_v3';
+const SESSION  = 30 * 24 * 60 * 60 * 1000; // 30 days
+const SAHMK_KEY = 'shmk_live_dd7d76ff4d871d38b396f05fb4483624d5a54989ae858122';
+const COLORS   = ['#c8f135','#34d399','#60a5fa','#fbbf24','#f87171','#a78bfa','#fb923c','#38bdf8'];
+const USD_TO_SAR = 3.75; // fixed peg
 
-function getPassword() {
-  return localStorage.getItem(PWD_KEY) || 'YOUR_NEW_PASSWORD';
-}
+// ── DEFAULT HOLDINGS ─────────────────────────────────────────
+const DEFAULTS = {
+  US: [
+    { ticker:'NVDA', name:'NVIDIA Corp',    shares:2.65, avgCost:215.87,  livePrice:null, changePct:null },
+    { ticker:'ASML', name:'ASML Holding',   shares:0.13, avgCost:1709.08, livePrice:null, changePct:null },
+    { ticker:'BB',   name:'BlackBerry Ltd', shares:2,    avgCost:10.44,   livePrice:null, changePct:null },
+  ],
+  SA: [
+    { ticker:'2222', name:'Saudi Aramco',   shares:225,  avgCost:27.74,  livePrice:null, changePct:null },
+    { ticker:'4164', name:'Alawwal Bank',   shares:5,    avgCost:140.47, livePrice:null, changePct:null },
+    { ticker:'7203', name:'ELM Company',    shares:7,    avgCost:142.63, livePrice:null, changePct:null },
+    { ticker:'7202', name:'Solutions BSCO', shares:3,    avgCost:216.16, livePrice:null, changePct:null },
+  ]
+};
+
+// ── AUTH ──────────────────────────────────────────────────────
+function getPwd() { return localStorage.getItem(PWD_KEY) || 'portfolio123'; }
 
 function unlock() {
-  const input = document.getElementById('pwd-input');
-  const val = input.value;
-  if (val === getPassword()) {
-    localStorage.setItem(AUTH_KEY, Date.now().toString());
+  const inp = document.getElementById('pwd-in');
+  if (inp.value === getPwd()) {
+    localStorage.setItem(AUTH_KEY, Date.now());
     document.getElementById('lock-screen').style.display = 'none';
     document.getElementById('app').style.display = 'block';
-    input.value = '';
-    document.getElementById('lock-error').textContent = '';
+    inp.value = '';
+    document.getElementById('lock-err').textContent = '';
     initApp();
   } else {
-    input.classList.add('error');
-    document.getElementById('lock-error').textContent = 'Incorrect password. Try again.';
-    setTimeout(() => input.classList.remove('error'), 400);
-    input.value = '';
+    inp.classList.add('shake');
+    document.getElementById('lock-err').textContent = 'Wrong password.';
+    setTimeout(() => inp.classList.remove('shake'), 400);
+    inp.value = '';
   }
 }
 
 function checkSession() {
   const ts = parseInt(localStorage.getItem(AUTH_KEY) || '0');
-  if (Date.now() - ts < SESSION_DURATION) {
+  if (Date.now() - ts < SESSION) {
     document.getElementById('lock-screen').style.display = 'none';
     document.getElementById('app').style.display = 'block';
     initApp();
   }
 }
 
-function logout() {
+function lockApp() {
   localStorage.removeItem(AUTH_KEY);
   document.getElementById('app').style.display = 'none';
   document.getElementById('lock-screen').style.display = 'flex';
+  clearInterval(autoTimer); clearInterval(cdTimer);
 }
 
-function openPwdModal() {
-  document.getElementById('pwd-modal').classList.add('open');
-  document.getElementById('modal-msg').textContent = '';
-  document.getElementById('new-pwd1').value = '';
-  document.getElementById('new-pwd2').value = '';
-}
-
-function closePwdModal() {
-  document.getElementById('pwd-modal').classList.remove('open');
-}
-
-function savePassword() {
-  const p1 = document.getElementById('new-pwd1').value;
-  const p2 = document.getElementById('new-pwd2').value;
-  const msg = document.getElementById('modal-msg');
-  if (!p1 || p1.length < 6) {
-    msg.style.color = 'var(--red)';
-    msg.textContent = 'Password must be at least 6 characters.';
-    return;
-  }
-  if (p1 !== p2) {
-    msg.style.color = 'var(--red)';
-    msg.textContent = 'Passwords do not match.';
-    return;
-  }
+function openPwd() { document.getElementById('pwd-modal').classList.add('open'); document.getElementById('modal-msg').textContent = ''; document.getElementById('np1').value=''; document.getElementById('np2').value=''; }
+function closePwd() { document.getElementById('pwd-modal').classList.remove('open'); }
+function savePwd() {
+  const p1 = document.getElementById('np1').value, p2 = document.getElementById('np2').value, msg = document.getElementById('modal-msg');
+  if (p1.length < 6) { msg.style.color='var(--red)'; msg.textContent='Min 6 characters.'; return; }
+  if (p1 !== p2)     { msg.style.color='var(--red)'; msg.textContent='Passwords do not match.'; return; }
   localStorage.setItem(PWD_KEY, p1);
-  msg.style.color = 'var(--green)';
-  msg.textContent = '✓ Password updated!';
-  setTimeout(closePwdModal, 1200);
+  msg.style.color='var(--green)'; msg.textContent='✓ Password saved!';
+  setTimeout(closePwd, 1200);
 }
 
 // ── DATA ──────────────────────────────────────────────────────
-const DEFAULT_HOLDINGS = {
-  US: [
-    { ticker:'NVDA', name:'NVIDIA Corp',     shares:2.65, avgCost:215.87,  currency:'USD', livePrice:null, changePct:null },
-    { ticker:'ASML', name:'ASML Holding',    shares:0.13, avgCost:1709.08, currency:'USD', livePrice:null, changePct:null },
-    { ticker:'BB',   name:'BlackBerry Ltd',  shares:2,    avgCost:10.44,   currency:'USD', livePrice:null, changePct:null },
-  ],
-  SA: []
-};
-const ALLOC_COLORS = ['#c8f135','#34d399','#60a5fa','#fbbf24','#f87171','#a78bfa','#fb923c'];
 let holdings;
-let countdownTimer = null;
-let countdown = 0;
-
-function loadHoldings() {
-  try {
-    const s = localStorage.getItem(DATA_KEY);
-    if (s) return JSON.parse(s);
-  } catch(e) {}
-  return JSON.parse(JSON.stringify(DEFAULT_HOLDINGS));
+function load() {
+  try { const s = localStorage.getItem(DATA_KEY); if (s) return JSON.parse(s); } catch(e) {}
+  return JSON.parse(JSON.stringify(DEFAULTS));
 }
-
-function saveHoldings() {
-  try { localStorage.setItem(DATA_KEY, JSON.stringify(holdings)); } catch(e) {}
-}
+function save() { try { localStorage.setItem(DATA_KEY, JSON.stringify(holdings)); } catch(e) {} }
 
 // ── MARKET STATUS ─────────────────────────────────────────────
-function updateMarketStatus() {
+function marketStatus() {
   const now = new Date();
   const utc = now.getTime() + now.getTimezoneOffset() * 60000;
-  const nyTime = new Date(utc - 3600000 * 4);
-  const nyH = nyTime.getHours(), nyM = nyTime.getMinutes(), nyDay = nyTime.getDay();
-  const usOpen = nyDay >= 1 && nyDay <= 5 && (nyH > 9 || (nyH===9 && nyM>=30)) && nyH < 16;
-  const saTime = new Date(utc + 3600000 * 3);
-  const saH = saTime.getHours(), saDay = saTime.getDay();
-  const saOpen = saDay >= 0 && saDay <= 3 && saH >= 10 && saH < 15;
-  document.getElementById('us-dot').className = 'dot' + (usOpen ? ' open' : '');
-  document.getElementById('sa-dot').className = 'dot' + (saOpen ? ' open' : '');
-  document.getElementById('us-status').textContent = 'US ' + (usOpen ? 'Open' : 'Closed');
-  document.getElementById('sa-status').textContent = 'Saudi ' + (saOpen ? 'Open' : 'Closed');
+  const ny = new Date(utc - 4 * 3600000);
+  const usOpen = ny.getDay()>=1 && ny.getDay()<=5 && (ny.getHours()>9||(ny.getHours()===9&&ny.getMinutes()>=30)) && ny.getHours()<16;
+  const sa = new Date(utc + 3 * 3600000);
+  const saOpen = sa.getDay()>=0 && sa.getDay()<=3 && sa.getHours()>=10 && sa.getHours()<15;
+  document.getElementById('us-dot').className = 'dot'+(usOpen?' open':'');
+  document.getElementById('sa-dot').className = 'dot'+(saOpen?' open':'');
+  document.getElementById('us-lbl').textContent = 'US '+(usOpen?'Open':'Closed');
+  document.getElementById('sa-lbl').textContent = 'Saudi '+(saOpen?'Open':'Closed');
 }
 
-// ── FETCH PRICE ───────────────────────────────────────────────
-async function fetchPrice(ticker, name, market) {
+// ── FETCH US PRICE (Anthropic) ────────────────────────────────
+async function fetchUS(ticker, name) {
   try {
-    const suffix = market === 'SA' ? 'Tadawul Saudi stock' : 'US stock';
     const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 500,
-        tools: [{ type: 'web_search_20250305', name: 'web_search' }],
-        messages: [{ role: 'user', content: `Current price of ${ticker} ${name} ${suffix}. Reply ONLY with JSON: {"price":123.45,"change_pct":-1.23} no other text.` }]
+        model:'claude-sonnet-4-20250514', max_tokens:500,
+        tools:[{type:'web_search_20250305',name:'web_search'}],
+        messages:[{role:'user',content:`Current stock price of ${ticker} (${name}) on US market. Reply ONLY with JSON: {"price":123.45,"change_pct":-1.23} no other text.`}]
       })
     });
-    const data = await res.json();
-    const text = data.content.map(i => i.text || '').join('');
-    const match = text.match(/\{"price"\s*:\s*[\d.]+\s*,\s*"change_pct"\s*:\s*-?[\d.]+\}/);
-    if (match) return JSON.parse(match[0]);
+    const d = await res.json();
+    const txt = d.content.map(i=>i.text||'').join('');
+    const m = txt.match(/\{"price"\s*:\s*[\d.]+\s*,\s*"change_pct"\s*:\s*-?[\d.]+\}/);
+    if (m) return JSON.parse(m[0]);
+  } catch(e) {}
+  return null;
+}
+
+// ── FETCH SAUDI PRICE (SAHMK) ─────────────────────────────────
+async function fetchSA(ticker) {
+  try {
+    const res = await fetch(`https://app.sahmk.sa/api/v1/quote/${ticker}/`, {
+      headers:{'X-API-Key': SAHMK_KEY}
+    });
+    const d = await res.json();
+    if (d.price !== undefined) {
+      return { price: parseFloat(d.price), change_pct: parseFloat(d.change_percent || 0) };
+    }
   } catch(e) {}
   return null;
 }
 
 // ── REFRESH ───────────────────────────────────────────────────
 async function refreshAll() {
-  const btn = document.getElementById('refresh-btn');
-  const icon = document.getElementById('spin-icon');
-  btn.disabled = true; icon.classList.add('spinning');
-  const all = [
-    ...holdings.US.map(h => ({ ...h, market:'US' })),
-    ...holdings.SA.map(h => ({ ...h, market:'SA' }))
-  ];
-  await Promise.all(all.map(async h => {
-    const result = await fetchPrice(h.ticker, h.name, h.market);
-    const item = holdings[h.market].find(x => x.ticker === h.ticker);
-    if (item && result) { item.livePrice = result.price; item.changePct = result.change_pct; }
-  }));
-  saveHoldings(); render();
+  const btn = document.getElementById('btn-refresh');
+  const ic  = document.getElementById('spin-ic');
+  btn.disabled = true; ic.classList.add('spinning');
+
+  await Promise.all([
+    ...holdings.US.map(async h => {
+      const r = await fetchUS(h.ticker, h.name);
+      if (r) { h.livePrice = r.price; h.changePct = r.change_pct; }
+    }),
+    ...holdings.SA.map(async h => {
+      const r = await fetchSA(h.ticker);
+      if (r) { h.livePrice = r.price; h.changePct = r.change_pct; }
+    })
+  ]);
+
+  save(); render();
   document.getElementById('last-updated').textContent = 'Updated ' + new Date().toLocaleTimeString();
-  btn.disabled = false; icon.classList.remove('spinning');
+  btn.disabled = false; ic.classList.remove('spinning');
 }
 
 // ── RENDER ────────────────────────────────────────────────────
 function render() {
-  updateMarketStatus();
-  renderTable('US', 'us-tbody');
-  renderTable('SA', 'sa-tbody');
-  renderStats(); renderAlloc();
+  marketStatus();
+  renderTable('US','us-body','USD');
+  renderTable('SA','sa-body','SAR');
+  renderStats();
+  renderAlloc();
 }
 
-function renderTable(market, tbodyId) {
-  const tbody = document.getElementById(tbodyId);
-  const list = holdings[market];
-  if (!list.length) {
-    tbody.innerHTML = `<tr><td colspan="8" class="loading-cell">No positions yet — add one below</td></tr>`;
-    return;
-  }
-  tbody.innerHTML = list.map((h, i) => {
+function renderTable(market, bodyId, cur) {
+  const tbody = document.getElementById(bodyId);
+  const list  = holdings[market];
+  if (!list.length) { tbody.innerHTML=`<tr><td colspan="8" class="empty-cell">No positions — add one below</td></tr>`; return; }
+  let mktTotal = 0;
+  const rows = list.map((h,i) => {
     const price = h.livePrice || h.avgCost;
-    const value = price * h.shares;
-    const invested = h.avgCost * h.shares;
-    const pnl = value - invested;
-    const pnlPct = pnl / invested * 100;
-    const cls = pnl >= 0 ? 'pos-val' : 'neg-val';
-    const sign = pnl >= 0 ? '+' : '';
-    const cur = h.currency || (market==='SA' ? 'SAR' : 'USD');
-    const priceDisplay = h.livePrice
+    const val   = price * h.shares;
+    const inv   = h.avgCost * h.shares;
+    const pnl   = val - inv;
+    const pct   = pnl / inv * 100;
+    mktTotal   += val;
+    const cls   = pnl>=0?'pos-val':'neg-val';
+    const sign  = pnl>=0?'+':'';
+    const pDisp = h.livePrice
       ? h.livePrice.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})
       : `<span style="color:var(--muted)">—</span>`;
-    const changeDisplay = h.changePct != null
-      ? `<div style="font-size:10px;color:${h.changePct>=0?'var(--green)':'var(--red)'};">${h.changePct>=0?'+':''}${h.changePct.toFixed(2)}%</div>`
+    const dayDisp = h.changePct!=null
+      ? `<div class="day-chg" style="color:${h.changePct>=0?'var(--green)':'var(--red)'};">${h.changePct>=0?'+':''}${h.changePct.toFixed(2)}%</div>`
       : '';
     return `<tr>
-      <td><div class="ticker">${h.ticker}</div><div class="company">${h.name}</div></td>
+      <td><div class="t-ticker">${h.ticker}</div><div class="t-name">${h.name}</div></td>
       <td>${h.shares}</td>
       <td>${cur} ${h.avgCost.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}</td>
-      <td>${priceDisplay}${changeDisplay}</td>
-      <td>${cur} ${value.toFixed(2)}</td>
-      <td class="${cls}">${sign}${cur} ${pnl.toFixed(2)}</td>
-      <td class="${cls}">${sign}${pnlPct.toFixed(2)}%</td>
-      <td><button onclick="removePosition('${market}',${i})" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:14px;">×</button></td>
+      <td>${pDisp}${dayDisp}</td>
+      <td>${cur} ${val.toFixed(2)}</td>
+      <td class="${cls}">${sign}${cur} ${Math.abs(pnl).toFixed(2)}</td>
+      <td class="${cls}">${sign}${pct.toFixed(2)}%</td>
+      <td><button onclick="removePos('${market}',${i})" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:15px;padding:0 4px;">×</button></td>
     </tr>`;
   }).join('');
+  tbody.innerHTML = rows;
+  if (market==='US') document.getElementById('us-total-lbl').textContent = `Total: USD ${mktTotal.toFixed(2)}`;
+  if (market==='SA') document.getElementById('sa-total-lbl').textContent = `Total: SAR ${mktTotal.toFixed(2)}`;
 }
 
 function renderStats() {
-  let totalValue = 0, totalInvested = 0, count = 0;
-  const markets = new Set();
-  ['US','SA'].forEach(m => {
-    holdings[m].forEach(h => {
-      totalValue += (h.livePrice || h.avgCost) * h.shares;
-      totalInvested += h.avgCost * h.shares;
-      count++;
-      if (holdings[m].length) markets.add(m);
-    });
-  });
-  const pnl = totalValue - totalInvested;
-  const pnlPct = totalInvested > 0 ? pnl / totalInvested * 100 : 0;
-  const sign = pnl >= 0 ? '+' : '';
-  document.getElementById('s-total').textContent = '$' + totalValue.toFixed(2);
-  document.getElementById('s-invested').textContent = '$' + totalInvested.toFixed(2);
-  const el = document.getElementById('s-pnl');
-  el.textContent = sign + '$' + Math.abs(pnl).toFixed(2);
-  el.className = 'stat-value ' + (pnl >= 0 ? 'pos' : 'neg');
-  document.getElementById('s-pnl-pct').textContent = sign + pnlPct.toFixed(2) + '%';
-  document.getElementById('s-positions').textContent = count;
-  document.getElementById('s-markets').textContent = [...markets].join(' + ') || '—';
+  let usVal=0, usInv=0, saVal=0, saInv=0;
+  holdings.US.forEach(h => { usVal+=(h.livePrice||h.avgCost)*h.shares; usInv+=h.avgCost*h.shares; });
+  holdings.SA.forEach(h => { saVal+=(h.livePrice||h.avgCost)*h.shares; saInv+=h.avgCost*h.shares; });
+  const saValUSD = saVal / USD_TO_SAR;
+  const saInvUSD = saInv / USD_TO_SAR;
+  const totVal  = usVal + saValUSD;
+  const totInv  = usInv + saInvUSD;
+  const pnl     = totVal - totInv;
+  const pnlPct  = totInv>0 ? pnl/totInv*100 : 0;
+  const sign    = pnl>=0?'+':'';
+  document.getElementById('s-total').textContent = '$'+totVal.toFixed(2);
+  document.getElementById('s-inv').textContent   = '$'+totInv.toFixed(2);
+  const pEl = document.getElementById('s-pnl');
+  pEl.textContent  = sign+'$'+Math.abs(pnl).toFixed(2);
+  pEl.className    = 'stat-val '+(pnl>=0?'pos':'neg');
+  document.getElementById('s-pnl-pct').textContent = sign+pnlPct.toFixed(2)+'%';
+  document.getElementById('s-us').textContent = '$'+usVal.toFixed(2);
+  document.getElementById('s-sa').textContent = 'SAR '+saVal.toFixed(2);
 }
 
 function renderAlloc() {
   let all = [];
-  ['US','SA'].forEach(m => holdings[m].forEach(h => {
-    all.push({ label: h.ticker, value: (h.livePrice || h.avgCost) * h.shares, market: m });
-  }));
-  const total = all.reduce((s,x) => s + x.value, 0);
-  all.sort((a,b) => b.value - a.value);
-  document.getElementById('alloc-bars').innerHTML = all.map((item, i) => {
-    const pct = total > 0 ? (item.value / total * 100).toFixed(1) : 0;
-    return `<div class="alloc-bar-row">
-      <div class="alloc-bar-label">
+  holdings.US.forEach(h => all.push({label:h.ticker, val:(h.livePrice||h.avgCost)*h.shares/1, market:'US', usdVal:(h.livePrice||h.avgCost)*h.shares}));
+  holdings.SA.forEach(h => all.push({label:h.ticker, val:(h.livePrice||h.avgCost)*h.shares/USD_TO_SAR, market:'SA', usdVal:(h.livePrice||h.avgCost)*h.shares/USD_TO_SAR}));
+  const total = all.reduce((s,x)=>s+x.usdVal,0);
+  all.sort((a,b)=>b.usdVal-a.usdVal);
+  document.getElementById('alloc').innerHTML = all.map((item,i)=>{
+    const pct = total>0?(item.usdVal/total*100).toFixed(1):0;
+    const cur = item.market==='SA'?'SAR':'USD';
+    const rawVal = item.market==='SA'?item.usdVal*USD_TO_SAR:item.usdVal;
+    return `<div class="alloc-row">
+      <div class="alloc-meta">
         <span style="font-weight:500;">${item.label} <span style="color:var(--muted);font-size:10px;">${item.market}</span></span>
-        <span style="color:var(--muted);">${pct}% · $${item.value.toFixed(0)}</span>
+        <span style="color:var(--muted);">${pct}% · ${cur} ${rawVal.toFixed(0)}</span>
       </div>
-      <div class="alloc-bar-track">
-        <div class="alloc-bar-fill" style="width:${pct}%;background:${ALLOC_COLORS[i%ALLOC_COLORS.length]};"></div>
-      </div>
+      <div class="alloc-track"><div class="alloc-fill" style="width:${pct}%;background:${COLORS[i%COLORS.length]};"></div></div>
     </div>`;
   }).join('');
 }
 
-function addPosition() {
-  const ticker = document.getElementById('inp-ticker').value.trim().toUpperCase();
-  const name = document.getElementById('inp-name').value.trim();
-  const shares = parseFloat(document.getElementById('inp-shares').value);
-  const cost = parseFloat(document.getElementById('inp-cost').value);
-  const market = document.getElementById('inp-market').value;
-  const currency = document.getElementById('inp-currency').value.trim().toUpperCase() || (market==='SA'?'SAR':'USD');
-  if (!ticker || !name || isNaN(shares) || isNaN(cost)) { alert('Please fill in all fields.'); return; }
-  holdings[market].push({ ticker, name, shares, avgCost: cost, currency, livePrice: null, changePct: null });
-  saveHoldings(); render();
-  ['inp-ticker','inp-name','inp-shares','inp-cost','inp-currency'].forEach(id => document.getElementById(id).value = '');
+// ── ADD / REMOVE ──────────────────────────────────────────────
+function addPos() {
+  const ticker = document.getElementById('in-ticker').value.trim().toUpperCase();
+  const name   = document.getElementById('in-name').value.trim();
+  const shares = parseFloat(document.getElementById('in-shares').value);
+  const cost   = parseFloat(document.getElementById('in-cost').value);
+  const market = document.getElementById('in-market').value;
+  if (!ticker||!name||isNaN(shares)||isNaN(cost)) { alert('Please fill all fields.'); return; }
+  holdings[market].push({ticker,name,shares,avgCost:cost,livePrice:null,changePct:null});
+  save(); render();
+  ['in-ticker','in-name','in-shares','in-cost'].forEach(id=>document.getElementById(id).value='');
 }
 
-function removePosition(market, idx) {
+function removePos(market, idx) {
   if (!confirm('Remove this position?')) return;
-  holdings[market].splice(idx, 1);
-  saveHoldings(); render();
+  holdings[market].splice(idx,1);
+  save(); render();
 }
 
-function setAutoRefresh() {
-  clearInterval(countdownTimer);
-  const secs = parseInt(document.getElementById('auto-interval').value);
-  if (!secs) { document.getElementById('next-refresh').textContent = ''; return; }
-  countdown = secs;
-  countdownTimer = setInterval(() => {
-    countdown--;
-    document.getElementById('next-refresh').textContent = `Next refresh in ${countdown}s`;
-    if (countdown <= 0) { countdown = secs; refreshAll(); }
-  }, 1000);
+// ── AUTO REFRESH ──────────────────────────────────────────────
+let autoTimer=null, cdTimer=null, cdVal=0;
+function setAuto() {
+  clearInterval(autoTimer); clearInterval(cdTimer);
+  const secs = parseInt(document.getElementById('auto-sel').value);
+  if (!secs) { document.getElementById('countdown').textContent=''; return; }
+  cdVal = secs;
+  cdTimer = setInterval(()=>{
+    cdVal--;
+    document.getElementById('countdown').textContent = `Next refresh in ${cdVal}s`;
+    if (cdVal<=0) { cdVal=secs; refreshAll(); }
+  },1000);
 }
 
+// ── INIT ──────────────────────────────────────────────────────
 function initApp() {
-  holdings = loadHoldings();
+  holdings = load();
   render();
-  setAutoRefresh();
-  setInterval(updateMarketStatus, 30000);
+  setAuto();
+  setInterval(marketStatus, 30000);
 }
 
-// ── BOOT ──────────────────────────────────────────────────────
 checkSession();
 </script>
 </body>
