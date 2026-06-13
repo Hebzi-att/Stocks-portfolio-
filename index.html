@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' https://blue-dawn-32e7.heba-att95.workers.dev https://fonts.googleapis.com https://fonts.gstatic.com; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Portfolio</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -387,7 +386,7 @@ async function fetchPrice(ticker, name, market) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
+        model: 'claude-sonnet-4-6',
         max_tokens: 500,
         tools: [{ type: 'web_search_20250305', name: 'web_search' }],
         messages: [{
@@ -425,20 +424,27 @@ async function refreshAll() {
   const btn = document.getElementById('btn-refresh');
   const ic  = document.getElementById('spin-ic');
   btn.disabled = true; ic.classList.add('spinning');
+  document.getElementById('last-updated').textContent = 'Fetching prices...';
 
-  await Promise.all([
-    ...holdings.US.map(async h => {
+  try {
+    const usPromises = holdings.US.map(async h => {
       const r = await fetchUS(h.ticker, h.name);
       if (r) { h.livePrice = r.price; h.changePct = r.change_pct; }
-    }),
-    ...holdings.SA.map(async h => {
+    });
+
+    const saPromises = holdings.SA.map(async h => {
       const r = await fetchSA(h.ticker, h.name);
       if (r) { h.livePrice = r.price; h.changePct = r.change_pct; }
-    })
-  ]);
+    });
 
-  save(); render();
-  document.getElementById('last-updated').textContent = 'Updated ' + new Date().toLocaleTimeString();
+    await Promise.all([...usPromises, ...saPromises]);
+    save(); render();
+    document.getElementById('last-updated').textContent = 'Updated ' + new Date().toLocaleTimeString();
+  } catch(e) {
+    document.getElementById('last-updated').textContent = 'Error fetching prices — check console';
+    console.error('Refresh error:', e);
+  }
+
   btn.disabled = false; ic.classList.remove('spinning');
 }
 
