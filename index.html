@@ -275,7 +275,7 @@
   </div>
 
   <footer>
-    Portfolio tracker · Live prices via Yahoo Finance · No API key required · Free forever<br>
+    Portfolio tracker · Live prices via Finnhub · US & Saudi markets · Free plan<br>
     Not financial advice · Prices may be delayed
   </footer>
 </div>
@@ -375,16 +375,18 @@ function marketStatus() {
   document.getElementById('sa-lbl').textContent = 'Saudi '+(saOpen?'Open':'Closed');
 }
 
-// ── FETCH PRICE via Yahoo Finance (no API key needed) ────────
-async function fetchYahoo(symbol) {
+// ── FINNHUB API KEY ───────────────────────────────────────────
+const FINNHUB_KEY = 'd8mqmopr01qp7ubmiur0d8mqmopr01qp7ubmiurg';
+
+// ── FETCH PRICE via Finnhub ───────────────────────────────────
+async function fetchFinnhub(symbol) {
   try {
-    const url = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=1d&range=1d`;
-    const res = await fetch(url, { headers: { 'Accept': 'application/json' } });
+    const url = `https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${FINNHUB_KEY}`;
+    const res = await fetch(url);
     const d = await res.json();
-    const meta = d?.chart?.result?.[0]?.meta;
-    if (meta) {
-      const price = meta.regularMarketPrice || meta.previousClose;
-      const prev  = meta.chartPreviousClose || meta.previousClose;
+    if (d.c && d.c > 0) {
+      const price = d.c; // current price
+      const prev  = d.pc; // previous close
       const change_pct = prev ? ((price - prev) / prev * 100) : 0;
       return { price: parseFloat(price.toFixed(2)), change_pct: parseFloat(change_pct.toFixed(2)) };
     }
@@ -393,13 +395,13 @@ async function fetchYahoo(symbol) {
 }
 
 async function fetchUS(ticker, name) {
-  return await fetchYahoo(ticker);
+  return await fetchFinnhub(ticker);
 }
 
-// ── FETCH SAUDI PRICE via Yahoo Finance ──────────────────────
+// ── FETCH SAUDI PRICE via Finnhub ────────────────────────────
 async function fetchSA(ticker, name) {
-  // Saudi stocks on Yahoo Finance use format: 2222.SR
-  return await fetchYahoo(ticker + '.SR');
+  // Saudi stocks on Finnhub use format: 2222.SR
+  return await fetchFinnhub(ticker + '.SR');
 }
 
 // ── REFRESH ───────────────────────────────────────────────────
