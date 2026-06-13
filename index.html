@@ -400,10 +400,10 @@
 const PWD_KEY   = 'pf_pwd';
 const AUTH_KEY  = 'pf_auth';
 const DATA_KEY  = 'pf_data_v2';
-const SESSION_DURATION = 8 * 60 * 60 * 1000; // 8 hours
+const SESSION_DURATION = 30 * 24 * 60 * 60 * 1000; // 30 days
 
 function getPassword() {
-  return localStorage.getItem(PWD_KEY) || 'portfolio123';
+  return localStorage.getItem(PWD_KEY) || 'YOUR_NEW_PASSWORD';
 }
 
 function unlock() {
