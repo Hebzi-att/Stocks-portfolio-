@@ -275,7 +275,7 @@
   </div>
 
   <footer>
-    Portfolio tracker · Live prices via Finnhub · US & Saudi markets · Free plan<br>
+    Portfolio tracker · Live prices via Anthropic API · Secured via Cloudflare Worker · US & Saudi markets<br>
     Not financial advice · Prices may be delayed
   </footer>
 </div>
@@ -375,33 +375,41 @@ function marketStatus() {
   document.getElementById('sa-lbl').textContent = 'Saudi '+(saOpen?'Open':'Closed');
 }
 
-// ── FINNHUB API KEY ───────────────────────────────────────────
-const FINNHUB_KEY = 'd8mqmopr01qp7ubmiur0d8mqmopr01qp7ubmiurg';
+// ── CLOUDFLARE WORKER PROXY ──────────────────────────────────
+const WORKER_URL = 'https://blue-dawn-32e7.heba-att95.workers.dev';
 
-// ── FETCH PRICE via Finnhub ───────────────────────────────────
-async function fetchFinnhub(symbol) {
+// ── FETCH PRICE via Worker → Anthropic ───────────────────────
+async function fetchPrice(ticker, name, market) {
   try {
-    const url = `https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${FINNHUB_KEY}`;
-    const res = await fetch(url);
+    const suffix = market === 'SA' ? 'Saudi Tadawul stock price in SAR' : 'US stock price in USD';
+    const res = await fetch(WORKER_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 500,
+        tools: [{ type: 'web_search_20250305', name: 'web_search' }],
+        messages: [{
+          role: 'user',
+          content: `What is the current ${suffix} for ${ticker} (${name})? Reply ONLY with JSON: {"price":123.45,"change_pct":-1.23} no other text.`
+        }]
+      })
+    });
     const d = await res.json();
-    if (d.c && d.c > 0) {
-      const price = d.c; // current price
-      const prev  = d.pc; // previous close
-      const change_pct = prev ? ((price - prev) / prev * 100) : 0;
-      return { price: parseFloat(price.toFixed(2)), change_pct: parseFloat(change_pct.toFixed(2)) };
-    }
+    const txt = d.content.map(i => i.text || '').join('');
+    const m = txt.match(/\{"price"\s*:\s*[\d.]+\s*,\s*"change_pct"\s*:\s*-?[\d.]+\}/);
+    if (m) return JSON.parse(m[0]);
   } catch(e) {}
   return null;
 }
 
 async function fetchUS(ticker, name) {
-  return await fetchFinnhub(ticker);
+  return await fetchPrice(ticker, name, 'US');
 }
 
-// ── FETCH SAUDI PRICE via Finnhub ────────────────────────────
+// ── FETCH SAUDI PRICE via Worker ─────────────────────────────
 async function fetchSA(ticker, name) {
-  // Saudi stocks on Finnhub use format: 2222.SR
-  return await fetchFinnhub(ticker + '.SR');
+  return await fetchPrice(ticker, name, 'SA');
 }
 
 // ── REFRESH ───────────────────────────────────────────────────
